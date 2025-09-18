@@ -9,11 +9,14 @@
     <h1>Name: {{ pokemon.name|capfirst }}</h1>
     <h2>Pokedex ID: {{ pokemon.pokedex_id }}</h2>
     {% if pokemon.sprite %}
-     <img src="{{ pokemon.sprite }}" alt="">
+     <img src="{{ pokemon.sprite.url }}" alt="{{ pokemon.sprite.url }}">
+     <p>Entrou</p>
+     {% else %}
+     <p>Imagem indisponível</p>
      {% endif %}
     <h2>Pokemon types</h2>
     <ul>
-        {% for type in pokemon.types %}
+        {% for type in pokemon.types.all %}
             <li>{{ type }}</li>
         {% endfor %}
     </ul>

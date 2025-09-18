@@ -1,6 +1,9 @@
 from django.core.paginator import Paginator
 from django.shortcuts import redirect, render
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
+from .models import Pokemon, PokemonType
+from io import BytesIO
+from django.core.files.base import ContentFile
 
 import requests
 # Create your views here.
@@ -13,20 +16,43 @@ def search_pokemon(request):
     return render(request, "pokedex/search_pokemon.html")
     
 def show_pokemon(request, name):
-
+    # Obter os dados da API do Pokémon
     response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{name}/", verify=False)
     
     if response.status_code == 200:
         data = response.json()
         
-        pokemon = {
-            "pokedex_id" : data["id"],
-            "name" : data["name"],
-            "types" : [t["type"]["name"] for t in data["types"]],
-            "sprite" : data["sprites"]["front_default"],
-        }
+        # Informações do Pokémon
+        pokedex_id = data["id"]
+        pokemon_name = data["name"]
+        types = [t["type"]["name"] for t in data["types"]]
+        sprite_url = data["sprites"]["front_default"]
         
-        return render(request, "pokedex/show_pokemon.html", {"pokemon":pokemon})
+        # Verificar se o Pokémon já existe no banco de dados
+        pokemon, created = Pokemon.objects.get_or_create(pokedex_id=pokedex_id, defaults={
+            'name': pokemon_name
+        })
+        
+        # Atualizar o nome caso o Pokémon já exista mas tenha outro nome (não esperado, mas é uma boa prática)
+        if not created and pokemon.name != pokemon_name:
+            pokemon.name = pokemon_name
+            pokemon.save()
+        
+        # Adicionar tipos ao Pokémon
+        for type_name in types:
+            pokemon_type, _ = PokemonType.objects.get_or_create(name=type_name)
+            pokemon.types.add(pokemon_type)
+        
+        # Baixar a imagem do sprite e salvar
+        if sprite_url:
+            response_sprite = requests.get(sprite_url, verify=False)
+            if response_sprite.status_code == 200:
+                # Criar um arquivo a partir da imagem recebida
+                image_data = BytesIO(response_sprite.content)
+                pokemon.sprite.save(f"{pokemon_name}.png", ContentFile(image_data.read()), save=True)
+        
+        # Retornar os dados para o template
+        return render(request, "pokedex/show_pokemon.html", {"pokemon": pokemon})
     
     return JsonResponse({"error": "Não foi possível buscar o Pokémon"}, status=500)
 
