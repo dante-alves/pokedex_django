@@ -14,7 +14,7 @@ def search_pokemon(request):
     
 def show_pokemon(request, name):
 
-    response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{name}/")
+    response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{name}/", verify=False)
     
     if response.status_code == 200:
         data = response.json()
@@ -32,7 +32,7 @@ def show_pokemon(request, name):
 
 def pokemons_by_generation(request, generation_id):
 
-    response = requests.get(f"https://pokeapi.co/api/v2/generation/{generation_id}/")
+    response = requests.get(f"https://pokeapi.co/api/v2/generation/{generation_id}/", verify=False)
 
     if response.status_code == 200:
         data = response.json()
