@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Welcome to the Pokedex</h1>
+    <h2>Please, select a generation</h2>
+    <ul>
+        {% for generation in generations %}
+            <a href="{% url 'pokedex:generation' generation_id=generation.id %}">
+                <li>Generation {{ generation.id }}</li>
+            </a>
+        {% endfor %}
+
+    </ul>
+    
+    <a href="{% url 'pokedex:search' %}">
+        <h1>Search for a pokemon by name</h1>
+     </a>
+</body>
+</html>
