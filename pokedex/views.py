@@ -44,7 +44,7 @@ def show_pokemon(request, name):
             pokemon.types.add(pokemon_type)
         
         # Baixar a imagem do sprite e salvar
-        if sprite_url:
+        if sprite_url and not pokemon.sprite:
             response_sprite = requests.get(sprite_url, verify=False)
             if response_sprite.status_code == 200:
                 # Criar um arquivo a partir da imagem recebida
