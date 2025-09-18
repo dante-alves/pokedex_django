@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemons by Generation</title>
+</head>
+<body>
+    <h1>Pokemons generation {{ generation }}</h1>
+    
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous Page</a>
+    {% endif %}
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next Page</a>
+    {% endif %}
+
+    <ul>
+        {% for pokemon in page_obj %}
+            <form action="">
+                {% if pokemon.sprite %}
+                    <img src="{{ pokemon.sprite }}" alt="">
+                {% endif %}
+                <a href="{% url 'pokedex:show' name=pokemon.name %}">
+                    <li>{{ pokemon.id }} - {{ pokemon.name|capfirst }}</li>
+                </a>
+            </form>
+        {% empty %}
+            <li>No pokemons founded</li>
+        {% endfor %}
+    </ul>
+
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous Page</a>
+    {% endif %}
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next Page</a>
+    {% endif %}
+</body>
+</html>

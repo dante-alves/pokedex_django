@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ pokemon.name }}</title>
+</head>
+<body>
+    <h1>Name: {{ pokemon.name|capfirst }}</h1>
+    <h2>Pokedex ID: {{ pokemon.pokedex_id }}</h2>
+    {% if pokemon.sprite %}
+     <img src="{{ pokemon.sprite }}" alt="">
+     {% endif %}
+    <h2>Pokemon types</h2>
+    <ul>
+        {% for type in pokemon.types %}
+            <li>{{ type }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
