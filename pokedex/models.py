@@ -32,6 +32,7 @@ class Pokemon(models.Model):
     pokedex_id = models.IntegerField(unique=True, default=None)
     name = models.CharField(max_length=15, unique=True, default=None)
     types = models.ManyToManyField(PokemonType)
+    sprite = models.ImageField(upload_to='media/', blank=True, null=True)
 
     def __str__(self):
         return self.name
